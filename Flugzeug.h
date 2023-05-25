@@ -1,21 +1,22 @@
 #ifndef FLUGZEUG_H
 #define FLUGZEUG_H
 
-#include <unordered_map>
+#include <map>
 #include <string>
 #include "Zeitpunkt.h"
 
-class Flugzeug {
-public:
-   Flugzeug() = default;
-    Flugzeug(const std::string& callsign);
-    void addZeitpunkt(int zeit, const Zeitpunkt& zeitpunkt);
-    void printDaten() const;
-    std::string getCallsign() const;
-
-private:
-    std::string callsign;
-    std::unordered_map<int, Zeitpunkt> daten;
+class Flugzeug 
+{
+    private:
+        std::string callsign;
+        std::map<int, Zeitpunkt> daten;
+    public:
+        Flugzeug() = default;
+        Flugzeug(const std::string& callsign);
+        void addZeitpunkt(int zeit, const Zeitpunkt& zeitpunkt);
+        void printDaten() const;
+        std::map<int, Zeitpunkt> returnDaten() const;
+        std::string getCallsign() const;
 };
 
 #endif // FLUGZEUG_H

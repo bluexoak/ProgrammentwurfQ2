@@ -2,16 +2,14 @@
 #ifndef INIT_H
 #define INIT_H
 
-#include <fstream>
-#include <sstream>
-#include <string>
 #include <vector>
-#include <iostream>
+#include <string>
+#include <map>
 #include "Flugzeug.h"
-#include "Zeitpunkt.h"
 
-std::vector<Flugzeug> init(const std::string& csvDatei);
-std::vector<std::string> splitString(const std::string& str, char delimiter);
-std::string toLowerCase(const std::string& str);
+std::vector<std::string> splitString(const std::string& line, char delimiter);
+std::string toLowercase(const std::string& str);
+bool readCSV(const std::string& filename, std::map<std::string, Flugzeug>& flugzeugMap);
 
-#endif // INIT_H
+
+#endif  // INIT_H
