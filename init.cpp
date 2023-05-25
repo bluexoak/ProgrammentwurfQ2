@@ -6,6 +6,8 @@
 #include <vector>
 #include <stdexcept>
 #include <algorithm>
+#include <chrono>
+#include <thread>
 #include "Flugzeug.h"
 
 std::vector<std::string> splitString(const std::string& line, char delimiter) 
@@ -69,39 +71,10 @@ bool readCSV(const std::string& filename, std::map<std::string, Flugzeug>& flugz
    int zeilennummer = 2; // Zeilennummer für Fehlermeldung (beginnt bei 2, da Header bereits gelesen wurde)
    int auswahl = 1;
    int gross = 0;
+   int dotCount = 0;
+
    while (std::getline(file, line)) {
       std::vector<std::string> fields = splitString(line, ',');
-
-      /*
-      // Überprüfung, ob alle Spalten vorhanden sind
-      if (fields.size() < spalten.size()) {
-         std::cerr << "Nicht alle Spaltenwerte gefunden in Zeile " << zeilennummer << ": " << line << std::endl;
-         continue;
-      }
-      */
-      
-      /*
-      switch(auswahl)
-      {
-         case 1:
-            std::cout << "Einlesen startet, bitte warten.";
-            break;
-         case 2:
-            std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-                     << "Einlesen startet, bitte warten..";
-            break;
-         case 3:
-            std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
-                        << "Einlesen startet, bitte warten...";
-               break;
-         case 4:
-            std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
-            auswahl = 1;
-            break;
-      }
-      */
-
-
       std::string callsign = fields[callsignIndex];
 
       // Überprüfung, ob das Flugzeug bereits in der Map existiert, andernfalls erstellen
@@ -133,13 +106,23 @@ bool readCSV(const std::string& filename, std::map<std::string, Flugzeug>& flugz
 
       zeilennummer++;
       gross++;
-      if(gross == 100000)
-      {
+      if (gross == 50000) {
+         switch (dotCount % 4) {
+            case 0: std::cout << "."; break;
+            case 1: std::cout << ".."; break;
+            case 2: std::cout << "..."; break;
+            case 3: std::cout << "\033[2K\r"; break;
+         }
+         std::cout.flush();
+         ++dotCount;
          auswahl++;
          gross = 0;
-      }
 
+         // Füge hier eine kleine Pause ein, um die Ausgabe lesbar zu machen
+         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      }
    }
 
+   std::cout << std::endl;
    return true;
 }

@@ -1,4 +1,3 @@
-
 // C++ program to calculate Distance
 // Between Two Points on Earth
 #define _USE_MATH_DEFINES
