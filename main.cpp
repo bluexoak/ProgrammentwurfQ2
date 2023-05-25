@@ -49,26 +49,6 @@ int main()
                 break;
         }
     }
-
-   // Beispielverwendung: Daten für ein bestimmtes Flugzeug ausgeben
-   std::string gesuchtesCallsign = "JIA5151";
-   bool flugzeugGefunden = false;
-   for (const auto& pair : flugzeugMap) 
-   {
-      const std::string& callsign = pair.first;
-      if (callsign.find(gesuchtesCallsign) != std::string::npos) 
-      {
-         const Flugzeug& gefundenesFlugzeug = pair.second;
-         gefundenesFlugzeug.printDaten();
-         flugzeugGefunden = true;
-      }
-   }
-
-   if (!flugzeugGefunden) 
-   {
-      std::cout << "Flugzeug mit Callsign " << gesuchtesCallsign << " wurde nicht gefunden." << std::endl;
-   }
-
    return 0;
 }
 
@@ -157,79 +137,5 @@ void entfernungsMessung()
             }
         }
          
-    }
-}
-
-std::vector<std::string> findNearestFlugzeuge(const std::string& targetCallsign, const std::map<std::string, Flugzeug>& flugzeugMap) {
-    std::vector<std::string> nearestFlugzeuge;
-    std::vector<std::pair<std::string, double>> distanceVector;
-
-    // Überprüfe, ob das Ziel-Flugzeug in der Map existiert
-    auto targetFlugzeugIter = flugzeugMap.find(targetCallsign);
-    if (targetFlugzeugIter == flugzeugMap.end()) {
-        std::cout << "Flugzeug nicht gefunden: " << targetCallsign << std::endl;
-        return nearestFlugzeuge;
-    }
-
-    const Flugzeug& targetFlugzeug = targetFlugzeugIter->second;
-    const std::map<int, Zeitpunkt>& targetZeitpunkte = targetFlugzeug.returnDaten();
-
-    // Durchlaufe die Flugzeuge in der Map
-    for (const auto& pair : flugzeugMap) {
-        const std::string& callsign = pair.first;
-        const Flugzeug& flugzeug = pair.second;
-
-        // Überspringe das Ziel-Flugzeug selbst
-        if (callsign == targetCallsign) {
-            continue;
-        }
-
-        double minDistance = std::numeric_limits<double>::max();
-
-        // Durchlaufe die Zeitpunkte des aktuellen Flugzeugs
-        for (const auto& targetPair : targetZeitpunkte) {
-            int targetZeit = targetPair.first;
-            const Zeitpunkt& targetZeitpunkt = targetPair.second;
-
-            // Überprüfe, ob das aktuelle Flugzeug den Zeitpunkt enthält
-            auto zeitpunktIter = flugzeug.returnDaten().find(targetZeit);
-            if (zeitpunktIter != flugzeug.returnDaten().end()) {
-                const Zeitpunkt& zeitpunkt = zeitpunktIter->second;
-                double currentDistance = distance(targetZeitpunkt.lat, targetZeitpunkt.lon, zeitpunkt.lat, zeitpunkt.lon);
-
-                // Aktualisiere den minimalen Abstand, falls erforderlich
-                if (currentDistance < minDistance) {
-                    minDistance = currentDistance;
-                }
-            }
-        }
-
-        distanceVector.push_back(std::make_pair(callsign, minDistance));
-    }
-
-    // Sortiere den Abstand nach aufsteigender Reihenfolge
-    std::sort(distanceVector.begin(), distanceVector.end(), [](const auto& lhs, const auto& rhs) {
-        return lhs.second < rhs.second;
-    });
-
-    // Extrahiere die Flugzeug-Callsigns der 5 nächstgelegenen Flugzeuge
-    for (size_t i = 0; i < std::min(distanceVector.size(), static_cast<size_t>(5)); ++i) {
-        nearestFlugzeuge.push_back(distanceVector[i].first);
-    }
-
-    return nearestFlugzeuge;
-}
-
-void kollisionsWarner()
-{
-    std::string cs;
-    cout << "Geben Sie das callsign ein, für das Sie den Kollisions-Warner ausführen wollen: ";
-    cin >> cs;
-    cout << "Die fünf " << cs << " am nächsten Flugzeuge sind: ";
-    auto itv = findNearestFlugzeuge(cs, flugzeugMap).begin();
-    while(itv != findNearestFlugzeuge(cs, flugzeugMap).end())
-    {
-        cout << *itv;
-        ++itv;
     }
 }
