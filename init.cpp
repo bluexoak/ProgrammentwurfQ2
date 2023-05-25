@@ -106,11 +106,11 @@ bool readCSV(const std::string& filename, std::map<std::string, Flugzeug>& flugz
 
       zeilennummer++;
       gross++;
-      if (gross == 50000) {
+      if (gross == 75000) {
          switch (dotCount % 4) {
             case 0: std::cout << "."; break;
-            case 1: std::cout << ".."; break;
-            case 2: std::cout << "..."; break;
+            case 1: std::cout << "."; break;
+            case 2: std::cout << "."; break;
             case 3: std::cout << "\033[2K\r"; break;
          }
          std::cout.flush();

@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 #include "Zeitpunkt.h"
 
 class Flugzeug 
@@ -17,6 +18,8 @@ class Flugzeug
         void printDaten() const;
         std::map<int, Zeitpunkt> returnDaten() const;
         std::string getCallsign() const;
+        std::map<int, std::vector<Flugzeug>> getNearestFlugzeuge(const std::string& callsign) const;
+
 };
 
 #endif // FLUGZEUG_H

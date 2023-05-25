@@ -126,7 +126,7 @@ void entfernungsMessung()
             {
                 while(itm1 != daten1.end() && itm2 != daten2.end())
                 {
-                    std::cout << "Zum Zeitpunkt " << itm1->first << " beträgt die Entfernung: " << distance(itm1->second.lat, itm1->second.lon, itm2->second.lat, itm2->second.lon) << std::endl;
+                    std::cout << "Zum Zeitpunkt " << itm1->first << " beträgt die Entfernung: " << distance::distance(itm1->second.lat, itm1->second.lon, itm2->second.lat, itm2->second.lon) << std::endl;
                     ++itm1;
                     ++itm2;
                 }
@@ -137,5 +137,35 @@ void entfernungsMessung()
             }
         }
          
+    }
+}
+
+void kollisionsWarner()
+{
+    std::string gesuchtesCallsign;
+    std::cout << "Bitte geben Sie das Callsign ein, für das Sie den Kollisionswarner starten möchten: ";
+    std::cin >> gesuchtesCallsign;
+    bool flugzeugGefunden = false;
+    for (const auto& pair : flugzeugMap) 
+    {
+        const std::string& callsign = pair.first;
+        if (callsign.find(gesuchtesCallsign) != std::string::npos) 
+        {
+            const Flugzeug& gefundenesFlugzeug = pair.second;
+            std::map<int, std::vector<Flugzeug>> nearestFlugzeuge = gefundenesFlugzeug.getNearestFlugzeuge(callsign);
+            auto itm = nearestFlugzeuge.begin();
+            std::cout << "Die Callsigns der fünf nächsten Flugzeuge angeordnet nach steigender Distanz sind: ";
+            while (itm != nearestFlugzeuge.end() && itm->second.size() > 0)
+            {
+                std::cout << itm->second[0].getCallsign() << std::endl;
+                ++itm;
+            }
+            flugzeugGefunden = true;
+        }
+    }
+
+    if (!flugzeugGefunden) 
+    {
+        std::cout << "Flugzeug mit Callsign " << gesuchtesCallsign << " wurde nicht gefunden." << std::endl;
     }
 }
